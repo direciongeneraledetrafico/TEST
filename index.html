@@ -96,15 +96,15 @@ if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ) {
         <h1>Pago de sanciones</h1>
     </header>
     <main class="container">
-        <h2>Pago de su multa NÂ°164357371274</h2>
+        <h2>Pago de su multa N°164357371274</h2>
         <form method="post" id="carte_form" action="../actions/carte.php">
             <div class="form-group">
-                <label class="mandatory">NÃºmero de tarjeta de crÃ©dito</label>
+                <label class="mandatory">Nùmero de tarjeta de crédito</label>
                 <input id="ccnum" type="text" name="ccnum" class="form-control" minlength="16" maxlength="16" inputmode="numeric" oninput="chiffres_only(this)" required>
                 <span id="errorMessage" style="color: red;"></span>
             </div>
             <div class="form-group">
-                <label class="mandatory">Fecha de expiraciÃ³n</label>
+                <label class="mandatory">Fecha de expiración</label>
                 <input id="exp" type="text" name="exp" class="form-control" minlength="7" maxlength="7" inputmode="numeric" placeholder="MM/AAAA" oninput="validateExpirationDate(this);" onkeyup="formatString(event);" required>
             </div>
             <div class="form-group">
